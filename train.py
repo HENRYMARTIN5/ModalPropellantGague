@@ -9,37 +9,50 @@ ap.add_argument("-e", "--epochs", type=int, default=50, help="Number of epochs t
 ap.add_argument("-b", "--batch_size", type=int, default=32, help="Batch size for training")
 ap.add_argument("-o", "--output", type=str, default="model.h5", help="Path to output")
 ap.add_argument("-r", "--random", type=bool, default=False, help="Whether to use random data for training (testing purposes only, produces useless model)")
+ap.add_argument("-d", "--dataset", type=str, default="dummy.csv", help="Path to dataset if not using random data")
 ap.add_argument("-p", "--plot", type=bool, default=False, help="Whether to plot the model")
+ap.add_argument("--test_samples", type=int, default=10, help="Number of samples to use for testing, taken from the end of the dataset. Only applies if not using random data")
+ap.add_argument("--input-features", type=int, default=4, help="Number of input features")
+ap.add_argument("--learning-rate", type=int, default=0.001, help="The learning rate for the Adam optimizer")
 args = vars(ap.parse_args())
 
 from keras.models import Sequential
 from keras.layers import Dense, Input
 from keras.utils import plot_model
+from keras.optimizers import Adam
 import numpy as np
 
 epochs = args["epochs"]
 batch_size = args["batch_size"]
 
 if not args["random"]:
-    log.critical("Dataset loading is not yet implemented! Please use the `-r true` flag for now.")
-    exit()
-    # Eventually, a dataset will be loaded here.
-    # The first 16 features will be used to pass the initial state of the frequencies,
-    # and the last 16 features will be used to pass the current state. That way, the
-    # model will be able to estimate with some accuracy the percentage of fuel left.
+    log.info(f"Loading dataset from {args['dataset']}...")
+    # Load the data from CSV file
+    data = np.genfromtxt(args['dataset'], delimiter=',', skip_header=1)
+    # Split the data into training and testing sets
+    x_train = data[:-args["test_samples"], 0:args["input_features"]] # First four columns are features for training data
+    y_train = data[:-args["test_samples"], args["input_features"]:] # Last column is the target for training data
+    x_test = data[-args["test_samples"]:, 0:args["input_features"]]
+    y_test = data[-args["test_samples"]:, args["input_features"]:]
 else:
     log.warn("Using random data for training! This will produce a useless model, and should only be used for testing.")
     log.info("Creating random dataset...")
-    x_train = np.random.rand(100, 32) # create random input data with 100 samples and 32 features
-    y_train = np.random.rand(100, 1) # create random output data with 100 samples
-    x_test = np.random.rand(20, 32) # create random input data with 20 samples for testing
-    y_test = np.random.rand(20, 1) # create random output data with 20 samples for testing
+    x_train = np.random.rand(100, args["input_features"])
+    y_train = np.random.rand(100, 1)
+    x_test = np.random.rand(20, args["input_features"])
+    y_test = np.random.rand(20, 1)
+
+log.info("Done loading dataset.")
+log.debug(f"Training data shape: {x_train.shape}")
+log.debug(f"Training labels shape: {y_train.shape}")
+log.debug(f"Testing data shape: {x_test.shape}")
+log.debug(f"Testing labels shape: {y_test.shape}")
 
 log.info("Creating model...")
 # create a Sequential model
 model = Sequential()
 # Input layer
-model.add(Input(shape=(32,))) # 32 input features
+model.add(Input(shape=(args["input_features"],)))
 # Hidden layers
 model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
@@ -49,7 +62,7 @@ model.add(Dense(1, activation='sigmoid'))
 
 # Compile the model with binary cross-entropy loss and Adam optimizer
 log.info("Compiling model...")
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=Adam(learning_rate=args["learning_rate"]), loss='binary_crossentropy', metrics=['accuracy'])
 
 log.info(f"Training model for {epochs} epochs with a batch size of {batch_size}...")
 model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test))
