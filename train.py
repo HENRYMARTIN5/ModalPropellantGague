@@ -31,9 +31,9 @@ else:
     log.warn("Using random data for training! This will produce a useless model, and should only be used for testing.")
     log.info("Creating random dataset...")
     x_train = np.random.rand(100, 32) # create random input data with 100 samples and 32 features
-    y_train = np.random.randint(0, 2, size=(100, 1)) # create random output data with 100 samples
+    y_train = np.random.rand(0, 2, size=(100, 1)) # create random output data with 100 samples
     x_test = np.random.rand(20, 32) # create random input data with 20 samples for testing
-    y_test = np.random.randint(0, 2, size=(20, 1)) # create random output data with 20 samples for testing
+    y_test = np.random.rand(0, 2, size=(20, 1)) # create random output data with 20 samples for testing
 
 log.info("Creating model...")
 # create a Sequential model
