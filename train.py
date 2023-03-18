@@ -13,13 +13,15 @@ ap.add_argument("-d", "--dataset", type=str, default="dummy.csv", help="Path to 
 ap.add_argument("-p", "--plot", type=bool, default=False, help="Whether to plot the model")
 ap.add_argument("--test_samples", type=int, default=10, help="Number of samples to use for testing, taken from the end of the dataset. Only applies if not using random data")
 ap.add_argument("--input-features", type=int, default=4, help="Number of input features")
-ap.add_argument("--learning-rate", type=int, default=0.001, help="The learning rate for the Adam optimizer")
+ap.add_argument("--learning-rate", type=float, default=0.001, help="The learning rate for the Adam optimizer")
+ap.add_argument("--closeenough-threshold", type=float, default=0.5, help="The learning rate for the Adam optimizer")
 args = vars(ap.parse_args())
 
 from keras.models import Sequential
 from keras.layers import Dense, Input
 from keras.utils import plot_model
 from keras.optimizers import Adam
+import keras.backend as K
 import numpy as np
 
 epochs = args["epochs"]
@@ -62,7 +64,17 @@ model.add(Dense(1, activation='sigmoid'))
 
 # Compile the model with binary cross-entropy loss and Adam optimizer
 log.info("Compiling model...")
-model.compile(optimizer=Adam(learning_rate=args["learning_rate"]), loss='binary_crossentropy', metrics=['accuracy'])
+
+def closeenough_metric(threshold=0.5):
+    """
+    The "Close Enough" metric. Returns the mean of the number of samples where the model's output is within the threshold (0.5 by default) of the actual value.
+    """
+    def metric(y_true, y_pred):
+        y_pred_bool = K.cast(K.greater_equal(K.sigmoid(y_pred), threshold), dtype='float32')
+        return K.mean(K.equal(y_true, y_pred_bool))
+    return metric
+
+model.compile(optimizer=Adam(learning_rate=args["learning_rate"]), loss='binary_crossentropy', metrics=[closeenough_metric(threshold=0.5), 'accuracy'])
 
 # TODO: Custom metric allowing for a threshold to be set for how close the model's output has to be to the actual value
 
