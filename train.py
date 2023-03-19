@@ -1,7 +1,12 @@
 import argparse
 from betterlib import logging
+import sys
 
 log = logging.Logger("./logs/train.log", "train")
+
+if sys.version_info[0] != (3) and sys.version_info[1] < (10):
+    log.critical("Python 3.10.x or greater is required to run this program.")
+    exit(1)
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
