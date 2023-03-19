@@ -81,8 +81,6 @@ def closeenough_metric(threshold=0.5):
 
 model.compile(optimizer=Adam(learning_rate=args["learning_rate"]), loss='binary_crossentropy', metrics=[closeenough_metric(threshold=0.5), 'accuracy'])
 
-# TODO: Custom metric allowing for a threshold to be set for how close the model's output has to be to the actual value
-
 log.info(f"Training model for {epochs} epochs with a batch size of {batch_size}...")
 model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test))
 
