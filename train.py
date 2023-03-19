@@ -10,7 +10,7 @@ if sys.version_info[0] != (3) and sys.version_info[1] < (10):
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-e", "--epochs", type=int, default=50, help="Number of epochs to train the model")
+ap.add_argument("-e", "--epochs", type=int, default=100, help="Number of epochs to train the model")
 ap.add_argument("-b", "--batch_size", type=int, default=32, help="Batch size for training")
 ap.add_argument("-o", "--output", type=str, default="model.h5", help="Path to output")
 ap.add_argument("-r", "--random", type=bool, default=False, help="Whether to use random data for training (testing purposes only, produces useless model)")
@@ -80,6 +80,6 @@ model.save(args['output'])
 
 if args["plot"]:
     log.info("Plotting model...")
-    plot_model(model, to_file='model.png', show_shapes=True)
+    plot_model(model, to_file='img/model_plot.png', show_shapes=True)
 
 log.info("Done.")
