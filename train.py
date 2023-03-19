@@ -14,19 +14,19 @@ ap.add_argument("-e", "--epochs", type=int, default=50, help="Number of epochs t
 ap.add_argument("-b", "--batch_size", type=int, default=32, help="Batch size for training")
 ap.add_argument("-o", "--output", type=str, default="model.h5", help="Path to output")
 ap.add_argument("-r", "--random", type=bool, default=False, help="Whether to use random data for training (testing purposes only, produces useless model)")
-ap.add_argument("-d", "--dataset", type=str, default="dummy.csv", help="Path to dataset if not using random data")
+ap.add_argument("-d", "--dataset", type=str, default="dataset/dummy.csv", help="Path to dataset if not using random data")
 ap.add_argument("-p", "--plot", type=bool, default=False, help="Whether to plot the model")
-ap.add_argument("--test_samples", type=int, default=10, help="Number of samples to use for testing, taken from the end of the dataset. Only applies if not using random data")
+ap.add_argument("-t", "--threshold", type=float, default=0.2, help="The threshold for the 'Close Enough' metric. The maximum difference between the predicted and actual values for a sample to be considered 'close enough'.")
+ap.add_argument("--test-samples", type=int, default=10, help="Number of samples to use for testing, taken from the end of the dataset. Only applies if not using random data")
 ap.add_argument("--input-features", type=int, default=4, help="Number of input features")
 ap.add_argument("--learning-rate", type=float, default=0.001, help="The learning rate for the Adam optimizer")
-ap.add_argument("--closeenough-threshold", type=float, default=0.5, help="The learning rate for the Adam optimizer")
 args = vars(ap.parse_args())
 
 from keras.models import Sequential
 from keras.layers import Dense, Input
 from keras.utils import plot_model
 from keras.optimizers import Adam
-import keras.backend as K
+from common import closeenough_metric
 import numpy as np
 
 epochs = args["epochs"]
@@ -70,16 +70,7 @@ model.add(Dense(1, activation='sigmoid'))
 # Compile the model with binary cross-entropy loss and Adam optimizer
 log.info("Compiling model...")
 
-def closeenough_metric(threshold=0.5):
-    """
-    The "Close Enough" metric. Returns the mean of the number of samples where the model's output is within the threshold (0.5 by default) of the actual value.
-    """
-    def metric(y_true, y_pred):
-        y_pred_bool = K.cast(K.greater_equal(K.sigmoid(y_pred), threshold), dtype='float32')
-        return K.mean(K.equal(y_true, y_pred_bool))
-    return metric
-
-model.compile(optimizer=Adam(learning_rate=args["learning_rate"]), loss='binary_crossentropy', metrics=[closeenough_metric(threshold=0.5), 'accuracy'])
+model.compile(optimizer=Adam(learning_rate=args["learning_rate"]), loss='binary_crossentropy', metrics=[closeenough_metric(threshold=args['threshold']), 'accuracy'])
 
 log.info(f"Training model for {epochs} epochs with a batch size of {batch_size}...")
 model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test))
