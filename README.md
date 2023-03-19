@@ -1,7 +1,5 @@
 # High-Accuracy Estimation of Current Fuel Capacity Within a Fuel Tank In Low to Zero Gravity
 
-Or, in layman's terms, a fancy AI that tells you how much fuel is left in your spaceship.
-
 ## Introduction
 
 This project is a proof-of-concept for a fuel estimation system that can be used in low to zero gravity environments. In its current state, it uses dummy data representing a rough estimation of the Fourier Transform of a fuel tank's vibrations, taken with a piezo-electric sensor. This dummy data only contains 4 data points, but it could handle many more. This dummy data is stored in a CSV file, which you can find in the `dataset` folder.
