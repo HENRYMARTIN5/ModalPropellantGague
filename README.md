@@ -22,7 +22,7 @@ You can also specify the following parameters:
 
 - `-e` or `--epochs`: The number of epochs to train for. Defaults to 100.
 - `-b` or `--batch`: The batch size to use. Defaults to 32.
-- `-d` or `--dataset`: The dataset to use. Defaults to `dataset/dataset.csv`.
+- `-d` or `--dataset`: The dataset to use. Defaults to `dataset/dataset_intuitive_messed.csv`.
 - `-o` or `--output`: The output file to save the model to. Defaults to `model.h5`.
 - `-r` or `--random`: Whether to use random data or not. Defaults to `False`.
 - `-p` or `--plot`: Whether to plot the model's loss and accuracy or not. Defaults to `False`.
@@ -56,6 +56,6 @@ python eval.py
 
 ## Results on Dummy Dataset
 
-The model was trained for 4500 epochs on the dummy dataset (the "un-messed" version located at `/dataset/dummy.csv`), and was evaluated on a subset that was not used for training. Overall, it scored an accuracy of `94.28571319580078%` on 35 samples, with a threshold for of 0.1. This means that it was able to predict the fuel level within 0.1 of the actual value `94.28571319580078%` of the time. Interestingly, it scored the exact same (`94.28571319580078%`) on the "messed" version of the dataset, which was created by adding random noise to the original dataset.
+The model was trained for 4500 epochs on the dummy dataset (the "un-messed" version located at `/dataset/old_dummy/dummy.csv`), and was evaluated on a subset that was not used for training. Overall, it scored an accuracy of `94.28571319580078%` on 35 samples, with a threshold for of 0.1. This means that it was able to predict the fuel level within 0.1 of the actual value `94.28571319580078%` of the time. Interestingly, it scored the exact same (`94.28571319580078%`) on the "messed" version of the dataset, which was created by adding random noise to the original dataset.
 
 After retraining the model on the "messed" dataset for 800 epochs (higher values were causing loss to increase), it scored an accuracy of `88.57142639160156%` on the 35 "un-messed" samples and `74.28571319580078%` on the "messed" samples, both with a threshold of 0.1.

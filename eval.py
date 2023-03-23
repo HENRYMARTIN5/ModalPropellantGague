@@ -11,9 +11,9 @@ if sys.version_info[0] != (3) and sys.version_info[1] < (10):
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 # positional arguments
-ap.add_argument("-d", "--dataset", type=str, default="dataset/dummy_eval.csv", help="Path to evaluation dataset")
+ap.add_argument("-d", "--dataset", type=str, default="dataset/dummy_intuitive_messed.csv", help="Path to evaluation dataset")
 ap.add_argument("-m", "--model", type=str, default="model.h5", help="Path to pre-trained model")
-ap.add_argument("-t", "--threshold", type=float, default=0.2, help="The threshold for the 'Close Enough' metric. The maximum difference between the predicted and actual values for a sample to be considered 'close enough'.")
+ap.add_argument("-t", "--threshold", type=float, default=0.1, help="The threshold for the 'Close Enough' metric. The maximum difference between the predicted and actual values for a sample to be considered 'close enough'.")
 ap.add_argument("--input-features", type=int, default=4, help="Number of input features")
 args = vars(ap.parse_args())
 
