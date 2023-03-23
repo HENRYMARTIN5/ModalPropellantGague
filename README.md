@@ -56,6 +56,4 @@ python eval.py
 
 ## Results on Dummy Dataset
 
-The model was trained for 4500 epochs on the dummy dataset (the "un-messed" version located at `/dataset/old_dummy/dummy.csv`), and was evaluated on a subset that was not used for training. Overall, it scored an accuracy of `94.28571319580078%` on 35 samples, with a threshold for of 0.1. This means that it was able to predict the fuel level within 0.1 of the actual value `94.28571319580078%` of the time. Interestingly, it scored the exact same (`94.28571319580078%`) on the "messed" version of the dataset, which was created by adding random noise to the original dataset.
-
-After retraining the model on the "messed" dataset for 800 epochs (higher values were causing loss to increase), it scored an accuracy of `88.57142639160156%` on the 35 "un-messed" samples and `74.28571319580078%` on the "messed" samples, both with a threshold of 0.1.
+The model was trained for 800 epochs on the dummy dataset (the "intuitive_messed" version located at `/dataset/dummy_intuitive_messed.csv`), and was evaluated on a subset that was not used for training. Overall, it scored an accuracy of `97.39620208740234%` on 2842 samples, with a threshold for of 0.1. This means that it was able to predict the fuel level within 10% of the actual value about 94% of the time. On the "un-messed" dataset, it scored a perfect `100%` accuracy on the "un-messed" versions of the 2842 samples used previously.
