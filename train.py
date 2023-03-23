@@ -37,7 +37,7 @@ if not args["random"]:
     # Load the data from CSV file
     data = np.genfromtxt(args['dataset'], delimiter=',', skip_header=1)
     # Split the data into training and testing sets
-    x_train = data[:-args["test_samples"], 0:args["input_features"]] # First four columns are features for training data
+    x_train = data[:-args["test_samples"], 0:args["input_features"]] # First x columns are features for training data
     y_train = data[:-args["test_samples"], args["input_features"]:] # Last column is the target for training data
     x_test = data[-args["test_samples"]:, 0:args["input_features"]]
     y_test = data[-args["test_samples"]:, args["input_features"]:]
