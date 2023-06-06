@@ -65,7 +65,7 @@ model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(16, activation='relu'))
 # Output layer
-model.add(Dense(1, activation='sigmoid'))
+model.add(Dense(1, activation='sigmoid')) # sigmoid gives better performance here, which is strange considering the dataset
 
 # Compile the model with binary cross-entropy loss and Adam optimizer
 log.info("Compiling model...")
