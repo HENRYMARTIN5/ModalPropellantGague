@@ -42,6 +42,7 @@ if not args["random"]:
     x_test = data[-args["test_samples"]:, 0:args["input_features"]]
     y_test = data[-args["test_samples"]:, args["input_features"]:]
 else:
+    # DELETEME: Remove later
     log.warn("Using random data for training! This will produce a useless model, and should only be used for testing.")
     log.info("Creating random dataset...")
     x_train = np.random.rand(100, args["input_features"])
